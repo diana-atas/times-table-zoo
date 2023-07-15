@@ -15,16 +15,17 @@ struct Question: Identifiable {
 
 struct ContentView: View {
     @State private var multiplier = Int.random(in: 1...12)
-    private var multiplicand = Int.random(in: 1...12)
-    private var product = 1
+    @State private var multiplicand = Int.random(in: 1...12)
     private var numberOfQuestions = [5, 10, 20]
     @State private var selectedNumberOfQuestions = 5
-    @State private var isEditing = false
+    @State private var isGameActive = false
+    
     @State var arrayOfQuestions = [Question]()
     
     var body: some View {
         VStack {
             Stepper("Pick a multiplier: \(multiplier)", value: $multiplier, in: 1...12)
+            
             Section {
                 Picker("Pick number of questions", selection: $selectedNumberOfQuestions) {
                     ForEach(numberOfQuestions, id: \.self) {
@@ -35,13 +36,32 @@ struct ContentView: View {
             } header: {
                 Text("Pick number of questions")
             }
-            List {
-                ForEach(0..<Int(selectedNumberOfQuestions), id: \.self) {_ in
-                    Text("What is \(multiplier) x \(multiplicand)?")
+            
+            Button("Start") {
+                startGame()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding()
+            
+            if isGameActive {
+                List {
+                    ForEach(arrayOfQuestions) {question in
+                        Text(question.question)
+                    }
                 }
             }
         }
         .padding()
+    }
+    
+    func startGame() {
+        isGameActive = true
+        for _ in 1...selectedNumberOfQuestions {
+            multiplicand = Int.random(in: 1...12)
+            let answer = multiplier * multiplicand
+            let question = Question(question: "What is \(multiplier) x \(multiplicand)?", answer: answer)
+            arrayOfQuestions.append(question)
+        }
     }
 }
 
