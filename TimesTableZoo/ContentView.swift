@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+struct Question: Identifiable {
+    var id = UUID()
+    var question: String
+    var answer: Int
+}
+
 struct ContentView: View {
     @State private var multiplier = Int.random(in: 1...12)
     private var multiplicand = Int.random(in: 1...12)
@@ -14,6 +20,7 @@ struct ContentView: View {
     private var numberOfQuestions = [5, 10, 20]
     @State private var selectedNumberOfQuestions = 5
     @State private var isEditing = false
+    @State var arrayOfQuestions = [Question]()
     
     var body: some View {
         VStack {
