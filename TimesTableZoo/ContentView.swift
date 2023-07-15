@@ -56,15 +56,29 @@ struct ContentView: View {
             }
         }
         .padding()
+        .alert(scoreTitle, isPresented: $showingScore) {
+            Button("Continue", action: askQuestion)
+        }
+//        .alert("Game over", isPresented: $isGameActive) {
+//            Button("Play again", action: reset)
+//        }
     }
     
     func startGame() {
-        isGameActive = true
+        isGameActive.toggle()
         for _ in 1...selectedNumberOfQuestions {
             multiplicand = Int.random(in: 1...12)
             let answer = multiplier * multiplicand
             let question = Question(question: "What is \(multiplier) x \(multiplicand)?", correctAnswer: answer)
             arrayOfQuestions.append(question)
+        }
+    }
+    
+    func askQuestion() {
+        if questionNumber == selectedNumberOfQuestions - 1 {
+            isGameActive.toggle()
+        } else {
+            questionNumber += 1
         }
     }
     
@@ -75,6 +89,11 @@ struct ContentView: View {
             scoreTitle = "Incorrect"
         }
         showingScore = true
+    }
+    
+    func reset() {
+        isGameActive.toggle()
+        arrayOfQuestions = []
     }
 }
 
