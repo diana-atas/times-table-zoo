@@ -43,10 +43,9 @@ struct ContentView: View {
             .padding()
             
             if isGameActive {
-                List {
-                    ForEach(arrayOfQuestions) {question in
-                        Text(question.question)
-                    }
+                Text(arrayOfQuestions[questionNumber].question)
+                TextField("your answer", text: $playerAnswer)
+                    .keyboardType(.numberPad)
                 }
             }
         }
