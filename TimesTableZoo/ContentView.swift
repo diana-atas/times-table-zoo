@@ -17,8 +17,12 @@ struct ContentView: View {
     @State private var multiplicand = Int.random(in: 1...12)
     private var numberOfQuestions = [5, 10, 20]
     @State private var selectedNumberOfQuestions = 5
+    @State private var questionNumber = 0
     @State private var isGameActive = false
+    @State private var playerAnswer = ""
     
+    @State private var showingScore = false
+    @State private var scoreTitle = ""
     @State var arrayOfQuestions = [Question]()
     
     var body: some View {
@@ -46,6 +50,8 @@ struct ContentView: View {
                 Text(arrayOfQuestions[questionNumber].question)
                 TextField("your answer", text: $playerAnswer)
                     .keyboardType(.numberPad)
+                Button("Submit") {
+                    submitAnswer()
                 }
             }
         }
@@ -60,6 +66,15 @@ struct ContentView: View {
             let question = Question(question: "What is \(multiplier) x \(multiplicand)?", correctAnswer: answer)
             arrayOfQuestions.append(question)
         }
+    }
+    
+    func submitAnswer() {
+        if Int(playerAnswer) == arrayOfQuestions[questionNumber].correctAnswer {
+            scoreTitle = "Correct"
+        } else {
+            scoreTitle = "Incorrect"
+        }
+        showingScore = true
     }
 }
 
