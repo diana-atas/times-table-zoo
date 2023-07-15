@@ -7,10 +7,9 @@
 
 import SwiftUI
 
-struct Question: Identifiable {
-    var id = UUID()
+struct Question {
     var question: String
-    var answer: Int
+    var correctAnswer: Int
 }
 
 struct ContentView: View {
@@ -59,7 +58,7 @@ struct ContentView: View {
         for _ in 1...selectedNumberOfQuestions {
             multiplicand = Int.random(in: 1...12)
             let answer = multiplier * multiplicand
-            let question = Question(question: "What is \(multiplier) x \(multiplicand)?", answer: answer)
+            let question = Question(question: "What is \(multiplier) x \(multiplicand)?", correctAnswer: answer)
             arrayOfQuestions.append(question)
         }
     }
