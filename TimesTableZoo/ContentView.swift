@@ -21,6 +21,7 @@ struct ContentView: View {
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var scoreMessage = ""
     
     var body: some View {
         VStack {
@@ -56,6 +57,8 @@ struct ContentView: View {
                 }
                 .alert(scoreTitle, isPresented: $showingScore) {
                     Button("Continue", action: askQuestion)
+                } message: {
+                    Text(scoreMessage)
                 }
                 
             case .gameOver:
@@ -86,13 +89,16 @@ struct ContentView: View {
         } else {
             questionNumber += 1
         }
+        playerAnswer = ""
     }
     
     func submitAnswer() {
-        if Int(playerAnswer) == arrayOfQuestions[questionNumber].correctAnswer {
+        var correctAnswer = arrayOfQuestions[questionNumber].correctAnswer
+        if Int(playerAnswer) == correctAnswer {
             scoreTitle = "Correct"
         } else {
             scoreTitle = "Incorrect"
+            scoreMessage = "The correct answer is \(correctAnswer)."
         }
         showingScore = true
     }
