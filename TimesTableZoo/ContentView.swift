@@ -7,65 +7,71 @@
 
 import SwiftUI
 
-struct Question {
-    var question: String
-    var correctAnswer: Int
-}
-
 struct ContentView: View {
+    @ObservedObject var gameManager = GameManager()
+    @State var arrayOfQuestions = [Question]()
+    
     @State private var multiplier = Int.random(in: 1...12)
     @State private var multiplicand = Int.random(in: 1...12)
     private var numberOfQuestions = [5, 10, 20]
     @State private var selectedNumberOfQuestions = 5
     @State private var questionNumber = 0
-    @State private var isGameActive = false
+    
     @State private var playerAnswer = ""
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
-    @State var arrayOfQuestions = [Question]()
     
     var body: some View {
         VStack {
-            Stepper("Pick a multiplier: \(multiplier)", value: $multiplier, in: 1...12)
-            
-            Section {
-                Picker("Pick number of questions", selection: $selectedNumberOfQuestions) {
-                    ForEach(numberOfQuestions, id: \.self) {
-                        Text("\($0)")
+            switch gameManager.state {
+            case .gameNotStarted:
+                Stepper("Pick a multiplier: \(multiplier)", value: $multiplier, in: 1...12)
+                
+                Section {
+                    Picker("Pick number of questions", selection: $selectedNumberOfQuestions) {
+                        ForEach(numberOfQuestions, id: \.self) {
+                            Text("\($0)")
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("Pick number of questions")
+                }
+                
+                Button("Start") {
+                    startGame()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding()
+                
+            case .gameStarted:
+                VStack {
+                    Text(arrayOfQuestions[questionNumber].question)
+                    TextField("your answer", text: $playerAnswer)
+                        .keyboardType(.numberPad)
+                    Button("Submit") {
+                        submitAnswer()
                     }
                 }
-                .pickerStyle(.segmented)
-            } header: {
-                Text("Pick number of questions")
-            }
-            
-            Button("Start") {
-                startGame()
-            }
-            .buttonStyle(.borderedProminent)
-            .padding()
-            
-            if isGameActive {
-                Text(arrayOfQuestions[questionNumber].question)
-                TextField("your answer", text: $playerAnswer)
-                    .keyboardType(.numberPad)
-                Button("Submit") {
-                    submitAnswer()
+                .alert(scoreTitle, isPresented: $showingScore) {
+                    Button("Continue", action: askQuestion)
                 }
+                
+            case .gameOver:
+                
+                Text("Game over.")
+                Button("Play again") {
+                    reset()
+                }
+                
             }
         }
         .padding()
-        .alert(scoreTitle, isPresented: $showingScore) {
-            Button("Continue", action: askQuestion)
-        }
-//        .alert("Game over", isPresented: $isGameActive) {
-//            Button("Play again", action: reset)
-//        }
     }
     
     func startGame() {
-        isGameActive.toggle()
+        gameManager.state = .gameStarted
         for _ in 1...selectedNumberOfQuestions {
             multiplicand = Int.random(in: 1...12)
             let answer = multiplier * multiplicand
@@ -76,7 +82,7 @@ struct ContentView: View {
     
     func askQuestion() {
         if questionNumber == selectedNumberOfQuestions - 1 {
-            isGameActive.toggle()
+            gameManager.state = .gameOver
         } else {
             questionNumber += 1
         }
@@ -92,8 +98,10 @@ struct ContentView: View {
     }
     
     func reset() {
-        isGameActive.toggle()
+        gameManager.state = .gameNotStarted
         arrayOfQuestions = []
+        questionNumber = 0
+        playerAnswer = ""
     }
 }
 
