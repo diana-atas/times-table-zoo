@@ -11,7 +11,7 @@ struct ContentView: View {
     @ObservedObject var gameManager = GameManager()
     @State var arrayOfQuestions = [Question]()
     
-    @State private var multiplier = Int.random(in: 1...12)
+    @State private var selectedMultiplier = Int.random(in: 1...12)
     @State private var multiplicand = Int.random(in: 1...12)
     private var numberOfQuestions = [5, 10, 20]
     @State private var selectedNumberOfQuestions = 5
@@ -77,8 +77,8 @@ struct ContentView: View {
         gameManager.state = .gameStarted
         for _ in 1...selectedNumberOfQuestions {
             multiplicand = Int.random(in: 1...12)
-            let answer = multiplier * multiplicand
-            let question = Question(question: "What is \(multiplier) x \(multiplicand)?", correctAnswer: answer)
+            let answer = selectedMultiplier * multiplicand
+            let question = Question(question: "What is \(selectedMultiplier) x \(multiplicand)?", correctAnswer: answer)
             arrayOfQuestions.append(question)
         }
     }
