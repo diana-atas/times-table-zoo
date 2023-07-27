@@ -23,11 +23,37 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var scoreMessage = ""
     
+    @State private var animationAmount = 1.0
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 90))
+    ]
+    
     var body: some View {
         VStack {
             switch gameManager.state {
             case .gameNotStarted:
-                Stepper("Pick a multiplier: \(multiplier)", value: $multiplier, in: 1...12)
+                Text("Pick a multiplier")
+                    .font(.headline)
+                LazyVGrid(columns: columns) {
+                    ForEach(1..<13) { multiplier in
+                        Button {
+                            selectMultiplier(multiplier: multiplier)
+                        } label: {
+                            Text("\(multiplier)")
+                                .frame(width: 90, height: 90)
+                        }
+                        .padding(10)
+                        .foregroundColor(.white)
+                        .background(selectedMultiplier == multiplier ? .red : .blue)
+                        .clipShape(Circle())
+                        .scaleEffect(selectedMultiplier == multiplier ? 1 : 0.8)
+                        .animation(.interpolatingSpring(stiffness: 100, damping: 100), value: selectedMultiplier)
+                    }
+                }
+                .padding(.horizontal)
+                
+                //                    Stepper("Pick a multiplier: \(selectedMultiplier)", value: $selectedMultiplier, in: 1...12)
                 
                 Section {
                     Picker("Pick number of questions", selection: $selectedNumberOfQuestions) {
@@ -71,6 +97,10 @@ struct ContentView: View {
             }
         }
         .padding()
+    }
+    
+    func selectMultiplier(multiplier: Int) {
+        selectedMultiplier = multiplier
     }
     
     func startGame() {
