@@ -93,7 +93,7 @@ struct ContentView: View {
     }
     
     func submitAnswer() {
-        var correctAnswer = arrayOfQuestions[questionNumber].correctAnswer
+        let correctAnswer = arrayOfQuestions[questionNumber].correctAnswer
         if Int(playerAnswer) == correctAnswer {
             scoreTitle = "Correct"
         } else {
