@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E2BBEBF2A728ACD0004BAAC /* GameNotStartedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2BBEBE2A728ACD0004BAAC /* GameNotStartedView.swift */; };
 		6E72033B2A70CC9100FDD7EC /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E72033A2A70CC9100FDD7EC /* GameManager.swift */; };
 		6E72033D2A70D89100FDD7EC /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E72033C2A70D89100FDD7EC /* Question.swift */; };
 		6E77F4D92A5FB25800677D57 /* TimesTableZooApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E77F4D82A5FB25800677D57 /* TimesTableZooApp.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E2BBEBE2A728ACD0004BAAC /* GameNotStartedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameNotStartedView.swift; sourceTree = "<group>"; };
 		6E72033A2A70CC9100FDD7EC /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
 		6E72033C2A70D89100FDD7EC /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		6E77F4D52A5FB25800677D57 /* TimesTableZoo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimesTableZoo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +63,7 @@
 				6E77F4DA2A5FB25800677D57 /* ContentView.swift */,
 				6E77F4DC2A5FB25900677D57 /* Assets.xcassets */,
 				6E77F4DE2A5FB25900677D57 /* Preview Content */,
+				6E2BBEBE2A728ACD0004BAAC /* GameNotStartedView.swift */,
 			);
 			path = TimesTableZoo;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				6E72033B2A70CC9100FDD7EC /* GameManager.swift in Sources */,
 				6E72033D2A70D89100FDD7EC /* Question.swift in Sources */,
 				6E77F4DB2A5FB25800677D57 /* ContentView.swift in Sources */,
+				6E2BBEBF2A728ACD0004BAAC /* GameNotStartedView.swift in Sources */,
 				6E77F4D92A5FB25800677D57 /* TimesTableZooApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
