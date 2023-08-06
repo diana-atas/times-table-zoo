@@ -9,21 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var gameManager = GameManager()
-    @State var arrayOfQuestions = [Question]()
-    
-    @State private var selectedMultiplier = Int.random(in: 1...12)
-    @State private var multiplicand = Int.random(in: 1...12)
-    private var numberOfQuestions = [5, 10, 20]
-    @State private var selectedNumberOfQuestions = 5
-    @State private var questionNumber = 0
-    
-    @State private var playerAnswer = ""
-    
-    @State private var showingScore = false
-    @State private var scoreTitle = ""
-    @State private var scoreMessage = ""
-    
-    @State private var animationAmount = 1.0
     
     let columns = [
         GridItem(.adaptive(minimum: 90))
@@ -35,6 +20,7 @@ struct ContentView: View {
             case .gameNotStarted:
                 Text("Pick a multiplier")
                     .font(.headline)
+                
                 LazyVGrid(columns: columns) {
                     ForEach(1..<13) { multiplier in
                         Button {
@@ -45,19 +31,17 @@ struct ContentView: View {
                         }
                         .padding(10)
                         .foregroundColor(.white)
-                        .background(selectedMultiplier == multiplier ? .red : .blue)
+                        .background(gameManager.selectedMultiplier == multiplier ? .red : .blue)
                         .clipShape(Circle())
-                        .scaleEffect(selectedMultiplier == multiplier ? 1 : 0.8)
-                        .animation(.interpolatingSpring(stiffness: 100, damping: 100), value: selectedMultiplier)
+                        .scaleEffect(gameManager.selectedMultiplier == multiplier ? 1 : 0.8)
+                        .animation(.interpolatingSpring(stiffness: 100, damping: 100), value: gameManager.selectedMultiplier)
                     }
                 }
                 .padding(.horizontal)
                 
-                //                    Stepper("Pick a multiplier: \(selectedMultiplier)", value: $selectedMultiplier, in: 1...12)
-                
                 Section {
-                    Picker("Pick number of questions", selection: $selectedNumberOfQuestions) {
-                        ForEach(numberOfQuestions, id: \.self) {
+                    Picker("Pick number of questions", selection: $gameManager.selectedNumberOfQuestions) {
+                        ForEach(gameManager.numberOfQuestions, id: \.self) {
                             Text("\($0)")
                         }
                     }
@@ -74,17 +58,17 @@ struct ContentView: View {
                 
             case .gameStarted:
                 VStack {
-                    Text(arrayOfQuestions[questionNumber].question)
-                    TextField("your answer", text: $playerAnswer)
+                    Text(gameManager.arrayOfQuestions[gameManager.questionNumber].question)
+                    TextField("your answer", text: $gameManager.playerAnswer)
                         .keyboardType(.numberPad)
                     Button("Submit") {
                         submitAnswer()
                     }
                 }
-                .alert(scoreTitle, isPresented: $showingScore) {
+                .alert(gameManager.scoreTitle, isPresented: $gameManager.showingScore) {
                     Button("Continue", action: askQuestion)
                 } message: {
-                    Text(scoreMessage)
+                    Text(gameManager.scoreMessage)
                 }
                 
             case .gameOver:
@@ -100,44 +84,49 @@ struct ContentView: View {
     }
     
     func selectMultiplier(multiplier: Int) {
-        selectedMultiplier = multiplier
+        gameManager.selectedMultiplier = multiplier
     }
     
     func startGame() {
+        
         gameManager.state = .gameStarted
-        for _ in 1...selectedNumberOfQuestions {
-            multiplicand = Int.random(in: 1...12)
-            let answer = selectedMultiplier * multiplicand
-            let question = Question(question: "What is \(selectedMultiplier) x \(multiplicand)?", correctAnswer: answer)
-            arrayOfQuestions.append(question)
+        for _ in 1...gameManager.selectedNumberOfQuestions {
+            gameManager.multiplicand = Int.random(in: 1...12)
+            let answer = gameManager.selectedMultiplier * gameManager.multiplicand
+            let question = Question(question: "What is \(gameManager.selectedMultiplier) x \(gameManager.multiplicand)?", correctAnswer: answer)
+            gameManager.arrayOfQuestions.append(question)
         }
+        print("startGame: \(gameManager.arrayOfQuestions)")
     }
     
     func askQuestion() {
-        if questionNumber == selectedNumberOfQuestions - 1 {
+        if gameManager.questionNumber == gameManager.selectedNumberOfQuestions - 1 {
             gameManager.state = .gameOver
         } else {
-            questionNumber += 1
+            gameManager.questionNumber += 1
         }
-        playerAnswer = ""
+        gameManager.playerAnswer = ""
     }
     
     func submitAnswer() {
-        let correctAnswer = arrayOfQuestions[questionNumber].correctAnswer
-        if Int(playerAnswer) == correctAnswer {
-            scoreTitle = "Correct"
+        let correctAnswer = gameManager.arrayOfQuestions[gameManager.questionNumber].correctAnswer
+        print("submitAnswer, correctAnswer: \(correctAnswer)")
+        print("submitAnswer, questionNumber: \(gameManager.questionNumber)")
+        if Int(gameManager.playerAnswer) == correctAnswer {
+            gameManager.scoreTitle = "Correct"
+            gameManager.scoreMessage = ""
         } else {
-            scoreTitle = "Incorrect"
-            scoreMessage = "The correct answer is \(correctAnswer)."
+            gameManager.scoreTitle = "Incorrect"
+            gameManager.scoreMessage = "The correct answer is \(correctAnswer)."
         }
-        showingScore = true
+        gameManager.showingScore = true
     }
     
     func reset() {
         gameManager.state = .gameNotStarted
-        arrayOfQuestions = []
-        questionNumber = 0
-        playerAnswer = ""
+        gameManager.arrayOfQuestions = []
+        gameManager.questionNumber = 0
+        gameManager.playerAnswer = ""
     }
 }
 
